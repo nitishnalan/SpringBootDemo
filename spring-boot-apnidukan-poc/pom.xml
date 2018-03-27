@@ -34,7 +34,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat -->
 		<dependency>
@@ -46,7 +45,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
@@ -107,8 +106,9 @@
 		<dependency>
     		<groupId>org.eclipse.jdt.core.compiler</groupId>
     		<artifactId>ecj</artifactId>
-    		<version>3.7</version>
+    		<version>4.2.2</version>
 		</dependency>
+
 
 
 		<!-- Optional, test for static content, bootstrap CSS-->

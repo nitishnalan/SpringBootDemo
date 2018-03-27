@@ -1,12 +1,14 @@
 package com.apnidukan.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /*@Entity
 @Table(name="users")
@@ -16,8 +18,33 @@ import lombok.Setter;
 @Entity
 public class Users extends AbstractPersistable<Long>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4957637396239696444L;
+			
+	@OneToMany(targetEntity=Address.class, mappedBy="user",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	private Set<Address> addresses;
+	
+	//we will create one transient field for userId
+	
+	
+	private String username;
+	private String name;
+	private String email;
+	
+	@Column(name = "id", insertable = false, updatable = false)
+	private Long userId;
+	
+
 	public String getUsername() {
 		return username;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	public void setUsername(String username) {
 		this.username = username;
@@ -43,8 +70,6 @@ public class Users extends AbstractPersistable<Long>{
 		this.id = id;
 	}*/
 
-	private String username;
-	private String name;
-	private String email;
+
 	
 }
