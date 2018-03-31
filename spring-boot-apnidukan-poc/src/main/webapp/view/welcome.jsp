@@ -13,6 +13,6 @@
 
 <p><a href="${path}/users/list"> User List </a></p>
 <p><a href="${path}/address/list"> Address List</a></p>
-
+<p><a href="${path}/admin/searchproduct/1?searchfield="> Search Products</a></p>
 </body>
 </html>
