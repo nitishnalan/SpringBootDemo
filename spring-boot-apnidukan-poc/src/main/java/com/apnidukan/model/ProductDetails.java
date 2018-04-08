@@ -28,8 +28,16 @@ public class ProductDetails extends AbstractPersistable<Long> {
 	private String productName;
 	private String productDescription;
 	private boolean productImageExists;
-
+	private String productImageName;
 	
+	public String getProductImageName() {
+		return productImageName;
+	}
+
+	public void setProductImageName(String productImageName) {
+		this.productImageName = productImageName;
+	}
+
 	private transient long categoryId;
 	
 	public Category getCategory() {

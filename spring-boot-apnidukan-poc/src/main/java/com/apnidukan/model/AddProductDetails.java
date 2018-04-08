@@ -16,6 +16,16 @@ public class AddProductDetails {
 	private long categoryId;
 	
 	private MultipartFile productImages;
+	
+	private String productImageName;
+	
+	public String getProductImageName() {
+		return productImageName;
+	}
+
+	public void setProductImageName(String productImageName) {
+		this.productImageName = productImageName;
+	}
 
 	public long getProductId() {
 		return productId;

@@ -70,7 +70,8 @@ public class CommonQueryRepository {
 	    return template.query(sql,new RowMapper<SearchProduct>(){  
 	        public SearchProduct mapRow(ResultSet rs, int row) throws SQLException {  
 	        	SearchProduct e=new SearchProduct();  
-	            e.setProductId(Long.parseLong(rs.getString("id")));  
+	           // e.setProductId(Long.parseLong(rs.getString("id")));  
+	        	 e.setProductId((rs.getInt("id")));
 	            e.setProductName(rs.getString("product_name"));  
 	            e.setProductDescription(rs.getString("product_description"));  
 	            return e;  
@@ -81,18 +82,38 @@ public class CommonQueryRepository {
 	public List<SearchProduct> getProductsByPageAndSearch(int pageid, int total, String searchField) {
 		  String sql = "select * from product_details";
 		 // String sql="select * from product_details";
-		  if(!searchField.equals("")){
-			  sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
+		/*  if(searchField.equals("")){
+			//  sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
+		  }
+		  else*/ 
+		  if(searchField.equals("*")) {
+			 // sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
+			  sql = "select * from product_details";
+		  }else if(!searchField.equals("")){
+			  sql = sql + " WHERE id like '%"+searchField+"%' OR product_name like '%"+searchField+"%'";
 		  }
 		  sql = sql + " limit "+(pageid-1)+","+total;  
 		  
-		  System.out.println("SQL search : " + sql);
+		  System.out.println("SQL search getProductsByPageAndSearch : " + sql);
 		    return template.query(sql,new RowMapper<SearchProduct>(){  
 		        public SearchProduct mapRow(ResultSet rs, int row) throws SQLException {  
 		        	SearchProduct e=new SearchProduct();  
-		            e.setProductId(Long.parseLong(rs.getString("id")));  
-		            e.setProductName(rs.getString("product_name"));  
-		            e.setProductDescription(rs.getString("product_description"));  
+		            e.setProductId((rs.getInt("id")));
+		            //System.out.println("product ID");
+		            e.setProductName(rs.getString("product_name"));
+		            //System.out.println("product ID");
+		            e.setProductDescription(rs.getString("product_description")); 
+		            //System.out.println("product ID");
+		            e.setProductImageExists(rs.getBoolean("product_image_exists"));
+		            //System.out.println("product ID");
+		            e.setProductNumItems(rs.getInt("product_num_items"));
+		            //System.out.println("product ID");
+		            e.setProductPrice(rs.getDouble("product_price"));
+		            //System.out.println("product ID");
+		            e.setCategoryId(Long.parseLong(rs.getString("category_id")));
+		            e.setProductArchived(rs.getBoolean("product_archived"));
+		            e.setProductImageName(rs.getString("product_image_name"));
+		            //System.out.println("Name : " + e.getProductId() + " Image flag : " +e.isProductArchived() );
 		            return e;  
 		        }  
 		    });
@@ -101,18 +122,25 @@ public class CommonQueryRepository {
 	public List<SearchProduct> getProductsSearchSize(int pageid, int total, String searchField) {
 		  String sql = "select * from product_details";
 		 // String sql="select * from product_details";
-		  if(!searchField.equals("")){
+		  /*if(!searchField.equals("")){
 			  sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
-		  }
+		  }*/
 		  //sql = sql + " limit "+(pageid-1)+","+total;  
 		  
+		  if(searchField.equals("*")) {
+				 // sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
+				  sql = "select * from product_details";
+			  }else if(!searchField.equals("")){
+				  sql = sql + " WHERE id like'%"+searchField+"%' OR product_name like '%"+searchField+"%'";
+			  }
 		  System.out.println("SQL search : " + sql);
 		    return template.query(sql,new RowMapper<SearchProduct>(){  
 		        public SearchProduct mapRow(ResultSet rs, int row) throws SQLException {  
 		        	SearchProduct e=new SearchProduct();  
-		            e.setProductId(Long.parseLong(rs.getString("id")));  
+		            e.setProductId((rs.getInt("id")));  
 		            e.setProductName(rs.getString("product_name"));  
 		            e.setProductDescription(rs.getString("product_description"));  
+		            //e.setProductArchived(rs.getBoolean("product_image_exists"));
 		            return e;  
 		        }  
 		    });

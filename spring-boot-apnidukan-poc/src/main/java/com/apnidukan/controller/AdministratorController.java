@@ -2,6 +2,7 @@ package com.apnidukan.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,8 +40,13 @@ public class AdministratorController {
 
 	private Path folderLocation;
 
-	private Path rootLocation = Paths.get("upload-dir");
-	
+	//private Path rootLocation = Paths.get("upload-dir");
+	//Resource resource = new ClassPathResource("static/images").getPath();
+	private Path rootLocation = Paths.get(("src\\main\\resources\\static\\images\\"));
+	@Autowired
+    private ResourceLoader resourceLoader;
+	private Path rootLocationTemp = Paths.get(new ClassPathResource("noimage.jpg").getPath());
+
 	@Autowired
 	private ProductDetailsRepository productDetailsRepository;
 	
@@ -60,25 +69,42 @@ public class AdministratorController {
 			long tempFolderName = 0;
 			String folderNametemp = ProductDetailsUtil.getAutoIncrementId("product_details","Id",commonQueryRepository);
 			
+			System.out.println("Root Path : " + rootLocation);
+			
+			//NNC delete
+			/*System.out.println("Temp Root Path : " + rootLocationTemp);
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			//URL url = loader.getResource("/static");
+			Resource fileResource =resourceLoader.getResource("classpath: noimage.jpg");
+			
+		    File dir = fileResource.getFile();
+			
+		    
+		    System.out.println("URL path : " + dir.getAbsoluteFile().getParent());
+			*/
+			
 			
 			System.out.println("FolderName : " + folderNametemp);
 			tempFolderName = Long.parseLong(folderNametemp);
 			System.out.println("tempFolderName : " + tempFolderName);
-			
+			System.out.println("method init root location");
 			if(!Files.exists(rootLocation)){
+				System.out.println("before init root location");
 				init();
 			}
 			
-			
+			System.out.println("after init root location");
 			//System.out.println("addProducts.getProductImages() : " + addProducts.getProductImages().getOriginalFilename());
-			
+			System.out.println("path root " + rootLocation.toString());
 			if(!addProducts.getProductImages().getOriginalFilename().equals("")) {
 				MultipartFile file = addProducts.getProductImages();
-
+				
+				System.out.println("adding multipart");
 				//creates project with the product ID
 				if(tempFolderName!=0) {
-					String folderName = "upload-dir/".concat(Long.toString(tempFolderName));
-					System.out.println("folderName : " + folderName);
+					//String folderName = "upload-dir/".concat(Long.toString(tempFolderName));
+					String folderName = "src/main/resources/static/images/".concat(Long.toString(tempFolderName));
+					System.out.println("totalPATH : " + folderName);
 					folderLocation = Paths.get(folderName);
 					if(!Files.exists(folderLocation)){
 						Files.createDirectory(folderLocation);
@@ -95,6 +121,10 @@ public class AdministratorController {
 				
 				System.out.println("folderLocation : " + folderLocation);
 	            Files.copy(file.getInputStream(), this.folderLocation.resolve(file.getOriginalFilename()));
+	            
+	            System.out.println("image name : "+ file.getOriginalFilename());
+	            addProducts.setProductImageName(file.getOriginalFilename());
+	            products.setProductImageName(addProducts.getProductImageName());
 	            products.setProductImageExists(true);
 			}
 			else {
@@ -143,7 +173,7 @@ public class AdministratorController {
 	}*/
 	
 	
-	@RequestMapping(value = "/admin/searchprod/{pageid}", method = RequestMethod.GET)
+/*	@RequestMapping(value = "/admin/searchprod/{pageid}", method = RequestMethod.GET)
 	public ModelAndView searchProductOne(@PathVariable int pageid,HttpServletRequest request,@RequestParam String searchfield) {
 		String searchFieldController = request.getParameter("searchfield");
 		List<SearchProduct> listSearchProduct =  new LinkedList<>();
@@ -169,7 +199,7 @@ public class AdministratorController {
 			session.setAttribute("foundResults", "true");
 		}
 		return new ModelAndView("/admin/UpdateProduct","list",listSearchProduct);   
-	}
+	}*/
 	
 	
 	
@@ -180,25 +210,35 @@ public class AdministratorController {
 		String searchFieldController = request.getParameter("searchfield");
 		List<SearchProduct> listSearchProduct =  new LinkedList<>();
 		List<SearchProduct> resultSize =  new LinkedList<>();
+		
 		//set total size you would like to display
+		
+		System.out.println("PAGE ID in /admin/searchproduct/{pageid} : " + pageid);
+		System.out.println("searchFieldController : "+ searchFieldController);
+		
+		
 		int total=1;  
 		if(pageid==1){}  
 		else{  
 			pageid=(pageid-1)*total+1;  
 		} 
 		
-		if(searchFieldController.trim().equals("")) {			 
+		if(searchFieldController.trim().equals("*")) {			 
 			//listSearchProduct= commonQueryRepository.getProductsByPage(pageid,total);
+			listSearchProduct= commonQueryRepository.getProductsByPageAndSearch(pageid,total,searchFieldController);
+			resultSize=commonQueryRepository.getProductsSearchSize(pageid, total, searchFieldController);
+			
 			
 		}
-		else {
+		else if(!(searchFieldController.trim().equals(""))){
 			listSearchProduct= commonQueryRepository.getProductsByPageAndSearch(pageid,total,searchFieldController);
+			
 			resultSize=commonQueryRepository.getProductsSearchSize(pageid, total, searchFieldController);
 		}
 		
+		
 		HttpSession session = request.getSession(false);
 		session.setAttribute("searchFieldController", searchFieldController);
-		
 		if(listSearchProduct.size()!=0) {
 			session.setAttribute("foundResults", "true");
 		}else
@@ -207,7 +247,7 @@ public class AdministratorController {
 		}
 		
 		//display if the list is set
-		System.out.println("listSearchProduct SIZE: " + listSearchProduct.size());
+		System.out.println("listSearchProduct SIZE: " + listSearchProduct.toString());
 		
 		//display total result size
 		System.out.println("result SIZE : " + resultSize.size());

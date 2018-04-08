@@ -2,7 +2,7 @@ package com.apnidukan.model;
 
 public class SearchProduct {
 	
-	private long productId;
+	private int productId;
 	private String productName;
 	private String productDescription;
 	private boolean productImageExists;
@@ -12,12 +12,30 @@ public class SearchProduct {
 	private double productPrice;
 	
 	private long categoryId;
+	
+	private String productImageName;
+	
+	public String getProductImageName() {
+		return productImageName;
+	}
+
+	public void setProductImageName(String productImageName) {
+		this.productImageName = productImageName;
+	}
+
+	@Override
+	public String toString() {
+		return "SearchProduct [productId=" + productId + ", productName=" + productName + ", productDescription="
+				+ productDescription + ", productImageExists=" + productImageExists + ", productNumItems="
+				+ productNumItems + ", productArchived=" + productArchived + ", productPrice=" + productPrice
+				+ ", categoryId=" + categoryId + "]";
+	}
 
 	public long getProductId() {
 		return productId;
 	}
 
-	public void setProductId(long productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 

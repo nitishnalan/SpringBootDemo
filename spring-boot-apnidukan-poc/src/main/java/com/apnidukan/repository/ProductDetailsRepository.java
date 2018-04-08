@@ -13,5 +13,6 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 	//ProductDetails findByCategoryId(long id);
 
 	Collection findByCategory(Category findOne);
-
+	
+	ProductDetails findByIdAndProductArchived(long productId,boolean productArchived);
 }

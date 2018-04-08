@@ -21,9 +21,11 @@
 		<%
 			
 			out.print("<p>Enter ID of the Product OR Name of the Product you would like to Search: </p>");
+			
 			if(session.getAttribute("searchFieldController") != null){
 				String searchFieldValue = (String) session.getAttribute("searchFieldController");
 				out.print("<input type ='text' name='searchfield' value="+searchFieldValue+">");
+				System.out.println("searchFieldController 1 : " + searchFieldValue);
 			}else
 			{
 				out.print("<input type ='text' name='searchfield'/>");
@@ -38,17 +40,58 @@
 	<%
 		String flag = (String) session.getAttribute("foundResults");
 		System.out.println("flag : " + flag);
+	
 		if(flag.equals("true")){
 			out.print("<h1>Product Search List</h1>");  
 			out.print("<table border='2' width='70%' cellpadding='2'>"); 
-			out.print("<tr><th>Id</th><th>Name</th><th>Description</th></tr>");  
+			out.print("<tr><th>Image Present</th><th>Id</th><th>Name</th><th>Description</th></tr>");  
+			
 	%>
-	
+	<%-- 
 			<c:forEach var="product" items="${list}">   
 				<tr><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr> 
 			</c:forEach> 
 		</table> 
-		<br/>  
+		<br/>   --%>
+		
+	<%-- 	<c:forEach var="product" items="${list}">   
+			<c:if test="${product.productImageExists}">
+			</c:if>
+			<c:choose>
+				<c:when test="${product.productId} =false">
+				<tr><td></td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+				</c:when>
+		
+			<c:otherwise>
+				<tr><td>${product.productImageExists}</td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+			</c:otherwise>
+			 </c:choose>
+			
+			</c:forEach> 
+		</table> 
+		<br/> --%>
+		
+		<c:forEach var="product" items="${list}">   
+<%-- 			<c:if test="${product.productImageExist}">
+				<tr><td><img src="/apnidukan/resources/noimage.jpg" alt="Smiley face" width="50" height="50"></td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+			</c:if>	
+			
+			<c:if test="${product.productImageExists}">
+				<tr><td>true</td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+			</c:if>	 --%>
+				<c:choose>
+					<c:when test="${product.productImageExists}">
+						<tr><td><img src="<c:url value='/resources/static/images/${product.productId}/download.jpg'/>" alt="Smiley face" width="50" height="50"></td><td>${product.productImageExists}</td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+					</c:when> 
+		
+				<c:otherwise>					
+					<tr><td><img src="/apnidukan/resources/static/images/noimage.jpg" alt="Smiley face" width="50" height="50"></td><td>${product.productImageExists}</td><td>${product.productId}</td><td>${product.productName}</td><td>${product.productDescription}</td></tr>
+				</c:otherwise>
+			 
+				</c:choose>		
+			</c:forEach> 
+		</table> 
+		<br/>
 		
 		<%
 			if(session.getAttribute("searchFieldController") != null){
@@ -64,9 +107,6 @@
 					++pageNO;
 					--pageCounter;
 				}
-				/* out.print("<a href='/apnidukan/admin/searchproduct/1?searchfield="+searchFieldValue+"'>1</a>");   
-				out.print("<a href='/apnidukan/admin/searchproduct/2?searchfield="+searchFieldValue+"'>2</a>");  
-				out.print("<a href='/apnidukan/admin/searchproduct/3?searchfield="+searchFieldValue+"'>3</a>");  */
 				out.print(strBuild.toString());
 			}
 		
